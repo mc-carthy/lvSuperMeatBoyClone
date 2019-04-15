@@ -11,6 +11,9 @@ function Player:new(params)
     inst.h = 32
     inst.colour = { 0.75, 0, 0, 1 }
     inst.speed = 300
+    inst.gravity = 1000
+    inst.terminalVelocity = 1000
+    inst.dy = 0
 
     return inst
 end
@@ -30,14 +33,27 @@ function Player:draw()
 end
 
 function Player:move(dt)
-    local dx, dy = 0, 0
+    local dx = 0
     if love.keyboard.isDown('d') or love.keyboard.isDown('right') then
         dx = dx + self.speed
     end
     if love.keyboard.isDown('a') or love.keyboard.isDown('left') then
         dx = dx - self.speed
     end
-    self.x, self.y = self.x + dx * dt, self.y + dy * dt
+    if self:isGrounded() then
+        -- TODO: Temp fix to prevent player falling through 'floor'
+        self.y = love.graphics.getHeight() - self.h
+        self.dy = 0
+    else
+        if self.dy < self.terminalVelocity then
+            self.dy = self.dy + self.gravity * dt
+        end
+    end
+    self.x, self.y = self.x + dx * dt, (self.y + self.dy * dt) % love.graphics.getHeight()
+end
+
+function Player:isGrounded()
+    return (self.y + self.h) > love.graphics.getHeight()
 end
 
 return Player
