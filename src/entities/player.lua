@@ -10,12 +10,13 @@ function Player:new(params)
     inst.w = 32
     inst.h = 32
     inst.colour = { 0.75, 0, 0, 1 }
+    inst.speed = 300
 
     return inst
 end
 
 function Player:update(dt)
-
+    self:move(dt)
 end
 
 function Player:draw()
@@ -26,6 +27,17 @@ function Player:draw()
     love.graphics.rectangle('line', self.x, self.y, self.w, self.h)
     love.graphics.setColor(1, 1, 1)
     love.graphics.setLineWidth(1)
+end
+
+function Player:move(dt)
+    local dx, dy = 0, 0
+    if love.keyboard.isDown('d') or love.keyboard.isDown('right') then
+        dx = dx + self.speed
+    end
+    if love.keyboard.isDown('a') or love.keyboard.isDown('left') then
+        dx = dx - self.speed
+    end
+    self.x, self.y = self.x + dx * dt, self.y + dy * dt
 end
 
 return Player
