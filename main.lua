@@ -6,8 +6,8 @@ function love.load()
 end
 
 function love.update(dt)
-    love.keyboard.keysPressed = {}
     player:update(dt)
+    love.keyboard.keysPressed = {}
 end
 
 function love.draw()

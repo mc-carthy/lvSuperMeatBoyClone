@@ -10,10 +10,11 @@ function Player:new(params)
     inst.w = 32
     inst.h = 32
     inst.colour = { 0.75, 0, 0, 1 }
-    inst.speed = 300
-    inst.gravity = 1000
+    inst.speed = 500
+    inst.gravity = 2000
     inst.terminalVelocity = 1000
     inst.dy = 0
+    inst.jumpSpeed = -1000
 
     return inst
 end
@@ -43,17 +44,21 @@ function Player:move(dt)
     if self:isGrounded() then
         -- TODO: Temp fix to prevent player falling through 'floor'
         self.y = love.graphics.getHeight() - self.h
-        self.dy = 0
+        if love.keyboard.wasPressed('space') then
+            self.dy = -1000
+        else
+            self.dy = 0
+        end
     else
         if self.dy < self.terminalVelocity then
             self.dy = self.dy + self.gravity * dt
         end
     end
-    self.x, self.y = self.x + dx * dt, (self.y + self.dy * dt) % love.graphics.getHeight()
+    self.x, self.y = (self.x + dx * dt) % love.graphics.getWidth(), self.y + self.dy * dt
 end
 
 function Player:isGrounded()
-    return (self.y + self.h) > love.graphics.getHeight()
+    return (self.y + self.h) >= love.graphics.getHeight()
 end
 
 return Player
