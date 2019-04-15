@@ -41,24 +41,30 @@ function Player:move(dt)
     if love.keyboard.isDown('a') or love.keyboard.isDown('left') then
         dx = dx - self.speed
     end
-    if self:isGrounded() then
-        -- TODO: Temp fix to prevent player falling through 'floor'
-        self.y = love.graphics.getHeight() - self.h
-        if love.keyboard.wasPressed('space') then
-            self.dy = -1000
-        else
-            self.dy = 0
-        end
-    else
-        if self.dy < self.terminalVelocity then
-            self.dy = self.dy + self.gravity * dt
-        end
-    end
+    self.dy = self:applyGravity(dt)
     self.x, self.y = (self.x + dx * dt) % love.graphics.getWidth(), self.y + self.dy * dt
 end
 
 function Player:isGrounded()
     return (self.y + self.h) >= love.graphics.getHeight()
+end
+
+function Player:applyGravity(dt)
+    if self:isGrounded() then
+        -- TODO: Temp fix to prevent player falling through 'floor'
+        self.y = love.graphics.getHeight() - self.h
+        if love.keyboard.wasPressed('space') then
+            return self.jumpSpeed
+        else
+            return 0
+        end
+    else
+        if self.dy < self.terminalVelocity then
+            return self.dy + self.gravity * dt
+        else
+            return self.dy
+        end
+    end
 end
 
 return Player
