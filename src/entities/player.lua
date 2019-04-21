@@ -15,7 +15,7 @@ function Player:new(params)
     inst.terminalVelocity = 1000
     inst.dy = 0
     inst.jumpSpeed = -1000
-
+    inst.isGrounded = false
     return inst
 end
 
@@ -42,29 +42,41 @@ function Player:move(dt)
         dx = dx - self.speed
     end
     self.dy = self:applyGravity(dt)
-    self.x, self.y = (self.x + dx * dt) % love.graphics.getWidth(), self.y + self.dy * dt
+    self.x, self.y = (self.x + dx * dt) % love.graphics.getWidth(), (self.y + self.dy * dt) % love.graphics.getHeight()
+    self:resolveCollisions()
 end
 
-function Player:isGrounded()
-    return (self.y + self.h) >= love.graphics.getHeight()
+function Player:resolveCollisions()
+    for _, block in pairs(blocks) do
+        local resolveVector = Collision.resolveStatic(self, block)
+        if resolveVector ~= nil then
+            self.isGrounded = true
+            self.x, self.y = self.x + resolveVector.x, self.y + resolveVector.y
+            break
+        else
+            self.isGrounded = false
+        end
+    end
 end
+
 
 function Player:applyGravity(dt)
-    if self:isGrounded() then
-        -- TODO: Temp fix to prevent player falling through 'floor'
-        self.y = love.graphics.getHeight() - self.h
-        if love.keyboard.wasPressed('space') then
-            return self.jumpSpeed
+    local dy = 0
+    if self.isGrounded then
+        -- if love.keyboard.wasPressed('space') then
+        if love.keyboard.isDown('space') then
+            dy = self.jumpSpeed
         else
-            return 0
+            dy =  0
         end
     else
         if self.dy < self.terminalVelocity then
-            return self.dy + self.gravity * dt
+            dy = self.dy + self.gravity * dt
         else
-            return self.dy
+            dy = self.dy
         end
     end
+    return dy
 end
 
 return Player

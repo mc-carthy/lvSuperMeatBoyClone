@@ -29,7 +29,7 @@ function Collision.resolveStatic(kinematicRect, staticRect)
         end
         return returnVector
     end
-    return { x = 0, y = 0 }
+    return nil
 end
 
 return Collision
