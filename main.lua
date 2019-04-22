@@ -5,20 +5,19 @@ Collision = require('src.util.collision')
 function love.load()
     love.keyboard.keysPressed = {}
     player = Player:new{}
-    blocks = {
-        { 
-            x = 00,
-            y = 400,
-            w = love.graphics.getWidth() / 2,
-            h = 32
-        },
-        { 
-            x = love.graphics.getWidth() / 2,
-            y = 480,
-            w = love.graphics.getWidth() / 2,
-            h = 32
-        }
-    }
+    blocks = {}
+    for y = 1, #Map do
+        for x = 1, #Map[y] do
+            if Map:isSolid(x, y) then
+                table.insert(blocks, {
+                    x = (x - 1) * GRID_SIZE,
+                    y = (y - 1) * GRID_SIZE,
+                    w = GRID_SIZE,
+                    h = GRID_SIZE
+                })
+            end
+        end
+    end
 end
 
 function love.update(dt)
@@ -30,7 +29,7 @@ function love.draw()
     love.graphics.setBackgroundColor(0, 0.5, 0.75)
     for y = 1, #Map do
         for x = 1, #Map[y] do
-            if Map[y][x] == 1 then
+            if Map:isSolid(x, y) then
                 love.graphics.setColor(0, 0, 0)
             else
                 love.graphics.setColor(0.5, 0.5, 0.5)

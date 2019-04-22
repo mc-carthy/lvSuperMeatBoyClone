@@ -1,6 +1,6 @@
 local TestMap = {}
 
-local GRID_SIZE = 40
+GRID_SIZE = 40
 local xSize = love.graphics.getWidth() / GRID_SIZE
 local ySize = love.graphics.getHeight() / GRID_SIZE
 
@@ -13,6 +13,10 @@ for y = 1, ySize do
             TestMap[y][x] = 0
         end
     end 
+end
+
+function TestMap:isSolid(x, y)
+    return self[y][x] == 1
 end
 
 return TestMap
