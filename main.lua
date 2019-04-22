@@ -1,4 +1,5 @@
 local Player = require('src.entities.player')
+local Map = require('src.map.testMap')
 Collision = require('src.util.collision')
 
 function love.load()
@@ -27,13 +28,24 @@ end
 
 function love.draw()
     love.graphics.setBackgroundColor(0, 0.5, 0.75)
-    love.graphics.setColor(0.5, 0.5, 0.5)
+    for y = 1, #Map do
+        for x = 1, #Map[y] do
+            if Map[y][x] == 1 then
+                love.graphics.setColor(0, 0, 0)
+            else
+                love.graphics.setColor(0.5, 0.5, 0.5)
+            end
+            love.graphics.rectangle('fill', (x - 1) * 40, (y - 1) * 40, 40, 40)
+        end
+    end
     for _, block in pairs(blocks) do
         love.graphics.setColor(0.5, 0.5, 0.5)
         love.graphics.rectangle('fill', block.x, block.y, block.w, block.h)
         love.graphics.setColor(0, 0, 0)
         love.graphics.rectangle('line', block.x, block.y, block.w, block.h)
     end
+
+
     player:draw()
 end
 
