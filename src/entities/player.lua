@@ -47,14 +47,20 @@ function Player:move(dt)
 end
 
 function Player:resolveCollisions()
+    self.isGrounded = false
     for _, block in pairs(blocks) do
         local resolveVector = Collision.resolveStatic(self, block)
         if resolveVector ~= nil then
-            self.isGrounded = true
-            self.x, self.y = self.x + resolveVector.x, self.y + resolveVector.y
-            break
+            if resolveVector.y ~= 0 then
+            -- self.x, self.y = self.x + resolveVector.x, self.y + resolveVector.y
+                self.y = self.y + resolveVector.y
+            else
+                self.x = self.x + resolveVector.x
+            end
+            if resolveVector.y < 0  then
+                self.isGrounded = true
+            end
         else
-            self.isGrounded = false
         end
     end
 end

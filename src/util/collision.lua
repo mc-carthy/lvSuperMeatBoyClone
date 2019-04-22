@@ -21,11 +21,11 @@ function Collision.resolveStatic(kinematicRect, staticRect)
     if Collision.pointInRect({ x = 0, y = 0}, minkRect) then
         local smallestX = math.abs(minkRect.x) < math.abs(minkRect.x + minkRect.w) and minkRect.x or (minkRect.x + minkRect.w)
         local smallestY = math.abs(minkRect.y) < math.abs(minkRect.y + minkRect.h) and minkRect.y or (minkRect.y + minkRect.h)
-        local returnVector = { x = 0, y = -smallestY }
-        if math.abs(returnVector.x) > math.abs(returnVector.y) then
-            returnVector.y = 0
-        elseif math.abs(returnVector.x) < math.abs(returnVector.y) then
+        local returnVector = { x = -smallestX, y = -smallestY }
+        if math.abs(smallestX) > math.abs(smallestY) then
             returnVector.x = 0
+        elseif math.abs(smallestX) < math.abs(smallestY) then
+            returnVector.y = 0
         end
         return returnVector
     end
