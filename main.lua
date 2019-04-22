@@ -8,7 +8,7 @@ function love.load()
     blocks = {}
     for y = 1, #Map do
         for x = 1, #Map[y] do
-            if Map:isSolid(x, y) then
+            if Map:isSolid(x, y) or love.math.random() > 0.8 then
                 table.insert(blocks, {
                     x = (x - 1) * GRID_SIZE,
                     y = (y - 1) * GRID_SIZE,

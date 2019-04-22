@@ -48,21 +48,25 @@ end
 
 function Player:resolveCollisions()
     self.isGrounded = false
+    local dx, dy = 0, 0
     for _, block in pairs(blocks) do
-        local resolveVector = Collision.resolveStatic(self, block)
+        local resolveVector = Collision.resolveStatic({
+            x = self.x + dx,
+            y = self.y + dy,
+            w = self.w,
+            h = self.h
+        }, block)
         if resolveVector ~= nil then
-            if resolveVector.y ~= 0 then
-            -- self.x, self.y = self.x + resolveVector.x, self.y + resolveVector.y
-                self.y = self.y + resolveVector.y
-            else
-                self.x = self.x + resolveVector.x
-            end
-            if resolveVector.y < 0  then
-                self.isGrounded = true
-            end
-        else
+            dx, dy = dx + resolveVector.x, resolveVector.y
         end
     end
+    if dy ~= 0 then
+        self.dy = 0
+        if dy < 0 then
+            self.isGrounded = true
+        end
+    end
+    self.x, self.y = self.x + dx, self.y + dy
 end
 
 
