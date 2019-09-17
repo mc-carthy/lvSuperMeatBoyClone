@@ -57,7 +57,10 @@ function Player:resolveCollisions()
             h = self.h
         }, block)
         if resolveVector ~= nil then
-            dx, dy = dx + resolveVector.x, resolveVector.y
+            -- TODO: Only check for collisions in the direction of movement, remove this hack
+            if resolveVector.y * self.dy <= 0 then
+                dx, dy = dx + resolveVector.x, resolveVector.y
+            end
         end
     end
     if dy ~= 0 then
